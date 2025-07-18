@@ -21,7 +21,7 @@ Feel free to ask questions: [the topic about this asset is on the Defold forum](
 
 | Tool Version   | Defold Version | Status        |
 | -------------- | -------------- | ------------- |
-| 1.5.2          | 1.9.8          | Tested ✅     |
+| 1.5.3          | 1.10.3         | Tested ✅     |
 
 ### Supported Platforms
 
