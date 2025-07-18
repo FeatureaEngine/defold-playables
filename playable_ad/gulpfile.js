@@ -95,6 +95,16 @@ function modifyAndMinifyJs(filename, contents) {
       /XMLHttpRequest/g,
       "ArchiveJsRequest"
     );
+
+    // Replace script loading to use inline text instead of src (since Defold 1.10.2)
+    const originalContents = contents;
+    contents = contents.replace(
+      /const script = document\.createElement\('script'\);\s*script\.src = src;\s*script\.type = "text\/javascript";\s*document\.body\.appendChild\(script\);/g,
+      'const script = document.createElement(\'script\'); script.text = response; script.type = "text/javascript"; document.body.appendChild(script);'
+    );
+    if (originalContents === contents) {
+      throw new Error("Failed to replace inline script loading code in dmloader.js");
+    }
   }
 
   const result = UglifyJS.minify(contents, { parse: { bare_returns: true } });
@@ -402,7 +412,7 @@ function embedJs(dir) {
       const input = file.contents.toString();
       let output = input;
 
-      const matches = Array.from(matchAll(input, /<script [^>]*?(data-)?src="(.+?)" embed(="(compress)")?><\/script>/g)).map(function (match) {
+      const matches = Array.from(matchAll(input, /<script [^>]*?(data-)?src="(.+?)" embed(="(compress)?")?><\/script>/g)).map(function (match) {
           return {
             searchMatch: match[0],
             filename: match[2],
@@ -418,6 +428,8 @@ function embedJs(dir) {
 
       const promises = Array.from(matches).map(function (match) {
         return new Promise(function (cb) {
+          // console.log("EMBED: " + match.filename);
+
           if (match.filename.endsWith("_archive.js")) {
             if (options["embed-archive-js"] == false) {
               // Skip embedding the _archive.js file
