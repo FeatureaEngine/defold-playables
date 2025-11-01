@@ -251,8 +251,8 @@
           // If `mraid` is available, the ad is running on Unity Ads etc.
           // Let's detect the platform from User Agent
           var userAgent = navigator.userAgent || navigator.vendor;
-          var url = "{{playableads.app_store_url}}";
-          var androidUrl = "{{playableads.google_play_url}}";
+          var url = "{{playable_ad.app_store_url}}";
+          var androidUrl = "{{playable_ad.google_play_url}}";
           if (/android/i.test(userAgent)) {
             url = androidUrl;
           }
